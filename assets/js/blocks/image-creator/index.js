@@ -1,8 +1,8 @@
 /**
  * Internal dependencies
  */
-import edit from './edit';
 import { registerBlockType } from '@wordpress/blocks';
+import edit from './edit';
 import { name, settings } from './block.json';
 
 /**
