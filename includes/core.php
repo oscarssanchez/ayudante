@@ -7,6 +7,7 @@
 
 namespace Wopenai\Core;
 
+use Wopenai\ImageCreator\Block;
 use \WP_Error;
 use Wopenai\Utility;
 
@@ -25,8 +26,6 @@ function setup() {
 	add_action( 'init', $n( 'init' ) );
 	add_action( 'wp_enqueue_scripts', $n( 'scripts' ) );
 	add_action( 'wp_enqueue_scripts', $n( 'styles' ) );
-	add_action( 'admin_enqueue_scripts', $n( 'admin_scripts' ) );
-	add_action( 'admin_enqueue_scripts', $n( 'admin_styles' ) );
 
 	// Editor styles. add_editor_style() doesn't work outside of a theme.
 	add_filter( 'mce_css', $n( 'mce_css' ) );
@@ -53,6 +52,8 @@ function i18n() {
  * @return void
  */
 function init() {
+	$image_creator = new Block();
+	$image_creator->init();
 	do_action( 'wopenai_plugin_init' );
 }
 
@@ -150,31 +151,6 @@ function scripts() {
 }
 
 /**
- * Enqueue scripts for admin.
- *
- * @return void
- */
-function admin_scripts() {
-
-	wp_enqueue_script(
-		'wopenai_plugin_shared',
-		script_url( 'shared', 'shared' ),
-		Utility\get_asset_info( 'shared', 'dependencies' ),
-		WOPENAI_PLUGIN_VERSION,
-		true
-	);
-
-	wp_enqueue_script(
-		'wopenai_plugin_admin',
-		script_url( 'admin', 'admin' ),
-		Utility\get_asset_info( 'admin', 'dependencies' ),
-		WOPENAI_PLUGIN_VERSION,
-		true
-	);
-
-}
-
-/**
  * Enqueue styles for front-end.
  *
  * @return void
@@ -203,29 +179,6 @@ function styles() {
 			WOPENAI_PLUGIN_VERSION
 		);
 	}
-
-}
-
-/**
- * Enqueue styles for admin.
- *
- * @return void
- */
-function admin_styles() {
-
-	wp_enqueue_style(
-		'wopenai_plugin_shared',
-		style_url( 'shared', 'shared' ),
-		[],
-		WOPENAI_PLUGIN_VERSION
-	);
-
-	wp_enqueue_style(
-		'wopenai_plugin_admin',
-		style_url( 'admin', 'admin' ),
-		[],
-		WOPENAI_PLUGIN_VERSION
-	);
 
 }
 
