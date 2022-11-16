@@ -1,19 +1,49 @@
 import { Button, Placeholder, Modal } from '@wordpress/components';
 
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
+import { createBlock } from '@wordpress/blocks';
+import { dispatch } from '@wordpress/data';
 
-const edit = () => {
+const edit = ({ clientId }) => {
 	const [isCreateImageModalOpen, setIsCreateImageModalOpen] = useState(false);
 	const [imageData, setImageData] = useState(null);
+	const [images, setImages] = useState(null);
 
 	const openImageCreationModal = () => setIsCreateImageModalOpen(true);
 	const closeImageCreationModal = () => setIsCreateImageModalOpen(false);
+
+	const getImageSrc = (imageSrc) => setImages(imageSrc);
+
+	useEffect(() => {
+		const imagesFetched = document.getElementsByClassName('imageResults');
+		if (imagesFetched) {
+			for (let i = 0; i < imagesFetched.length; i++) {
+				imagesFetched[i].addEventListener(
+					'click',
+					() => {
+						getImageSrc(imagesFetched[i].src);
+					},
+					false,
+				);
+			}
+		}
+	});
+
+	const convertToImageBlock = () => {
+		const input = document.getElementById('create-image-input');
+		const insertedBlock = createBlock('core/image', {
+			url: images,
+			alt: input.value,
+		});
+
+		dispatch('core/editor').replaceBlock(clientId, insertedBlock);
+	};
 
 	const createImages = () => {
 		const input = document.getElementById('create-image-input');
 		const body = {
 			prompt: input.value,
-			n: 1,
+			n: 4,
 			size: '256x256',
 		};
 
@@ -48,10 +78,14 @@ const edit = () => {
 					<Button variant="primary" onClick={createImages}>
 						Create Images
 					</Button>
-					{imageData &&
-						imageData.data.map((image) => {
-							return <img src={image.url} />;
-						})}
+					{imageData && (
+						<div>
+							{imageData.data.map((image) => {
+								return <img className="imageResults" id="imageResult" src={image.url} />;
+							})}
+							<Button variant="primary" onClick={convertToImageBlock}>Use selected Image</Button>
+						</div>
+					)}
 				</Modal>
 			)}
 		</>
