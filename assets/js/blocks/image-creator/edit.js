@@ -1,10 +1,13 @@
-import { Button, Placeholder, Modal } from '@wordpress/components';
-
+import {Button, Placeholder, Modal, TextControl, PanelBody, RadioControl} from '@wordpress/components';
+import { InspectorControls } from '@wordpress/block-editor';
 import { useState, useEffect } from '@wordpress/element';
 import { createBlock } from '@wordpress/blocks';
 import { dispatch } from '@wordpress/data';
+import { __experimentalNumberControl as NumberControl } from '@wordpress/components';
 
-const edit = ({ clientId }) => {
+const edit = ({ attributes, setAttributes, clientId }) => {
+	const { imageSize = '1024x1024', imageNumber = 4 } = attributes;
+
 	const [isCreateImageModalOpen, setIsCreateImageModalOpen] = useState(false);
 	const [imageData, setImageData] = useState(null);
 	const [images, setImages] = useState(null);
@@ -43,8 +46,8 @@ const edit = ({ clientId }) => {
 		const input = document.getElementById('create-image-input');
 		const body = {
 			prompt: input.value,
-			n: 4,
-			size: '256x256',
+			n: imageNumber,
+			size: imageSize,
 		};
 
 		fetch('https://api.openai.com/v1/images/generations', {
@@ -63,6 +66,31 @@ const edit = ({ clientId }) => {
 
 	return (
 		<>
+			<InspectorControls>
+				<PanelBody title="Request Settings" initialOpen>
+					<RadioControl
+						label="Images Size"
+						selected={imageSize}
+						options={[
+							{ label: '256x256 px', value: '256x256' },
+							{ label: '512x512 px', value: '512x512' },
+							{ label: '1024x1024 px', value: '1024x1024' },
+						]}
+						onChange={(size) => {
+							setAttributes({ imageSize: size });
+						}}
+					/>
+					<NumberControl
+						max="4"
+						min="1"
+						label="Images Requested per prompt"
+						value={imageNumber}
+						onChange={(number) => {
+							setAttributes({ imageNumber: number });
+						}}
+					/>
+				</PanelBody>
+			</InspectorControls>
 			<Placeholder label="Image Creator" instructions="Choose an Action to get started.">
 				<Button variant="secondary" onClick={openImageCreationModal}>
 					Create Image
@@ -81,7 +109,7 @@ const edit = ({ clientId }) => {
 					{imageData && (
 						<div>
 							{imageData.data.map((image) => {
-								return <img className="imageResults" id="imageResult" src={image.url} />;
+								return <img className="imageResults" src={image.url} />;
 							})}
 							<Button variant="primary" onClick={convertToImageBlock}>Use selected Image</Button>
 						</div>
