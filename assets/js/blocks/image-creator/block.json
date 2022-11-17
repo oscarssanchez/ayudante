@@ -3,6 +3,14 @@
   "description": "Type something and get an image back with AI!",
   "name": "wopenai/image-creator",
   "icon": "feedback",
+  "attributes":{
+    "imageSizes": {
+      "type": "string"
+    },
+    "imageNumber": {
+      "type": "string"
+    }
+  },
   "supports": {
     "align": false,
     "alignWide": false,
