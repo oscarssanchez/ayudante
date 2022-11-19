@@ -10,9 +10,24 @@
   "require": {
     "php": ">=7.0"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "10up/phpcs-composer": "dev-master"
+  },
   "autoload": {
     "psr-4": {
       "AyudanteAI\\": "includes/classes/"
+    }
+  },
+  "scripts": {
+    "lint": "phpcs ayudante-ai.php includes",
+    "lint-fix": "phpcbf ayudante-ai.php includes"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }
