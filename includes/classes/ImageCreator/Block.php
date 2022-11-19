@@ -1,6 +1,6 @@
 <?php
 
-namespace Wopenai\ImageCreator;
+namespace AyudanteAI\ImageCreator;
 
 class Block {
 
@@ -16,7 +16,7 @@ class Block {
 	 */
 	public function register_block() {
 		register_block_type(
-			WOPENAI_PLUGIN_PATH . '/assets/js/blocks/image-creator',
+			AYUDANTEAI_PLUGIN_PATH . '/assets/js/blocks/image-creator',
 			[
 				'render_callback' => [ $this, 'render_block_callback' ],
 			]

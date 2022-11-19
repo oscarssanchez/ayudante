@@ -1,7 +1,7 @@
 {
   "title": "Image Creator",
   "description": "Type something and get an image back with AI!",
-  "name": "wopenai/image-creator",
+  "name": "ayudanteai/image-creator",
   "icon": "feedback",
   "attributes":{
     "imageSizes": {

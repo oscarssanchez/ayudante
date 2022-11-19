@@ -2,14 +2,16 @@
 /**
  * Core plugin functionality.
  *
- * @package Wopenai
+ * @package AyudanteAI
  */
 
-namespace Wopenai\Core;
+namespace AyudanteAI\Core;
 
-use Wopenai\ImageCreator\Block;
+use AyudanteAI\Admin;
+use AyudanteAI\Api;
+use AyudanteAI\ImageCreator\Block;
 use \WP_Error;
-use Wopenai\Utility;
+use AyudanteAI\Utility;
 
 
 /**
@@ -32,7 +34,7 @@ function setup() {
 	// Hook to allow async or defer on asset loading.
 	add_filter( 'script_loader_tag', $n( 'script_loader_tag' ), 10, 2 );
 
-	do_action( 'wopenai_plugin_loaded' );
+	do_action( 'ayudanteai_plugin_loaded' );
 }
 
 /**
@@ -41,9 +43,9 @@ function setup() {
  * @return void
  */
 function i18n() {
-	$locale = apply_filters( 'plugin_locale', get_locale(), 'wopenai-plugin' );
-	load_textdomain( 'wopenai-plugin', WP_LANG_DIR . '/wopenai-plugin/wopenai-plugin-' . $locale . '.mo' );
-	load_plugin_textdomain( 'wopenai-plugin', false, plugin_basename( WOPENAI_PLUGIN_PATH ) . '/languages/' );
+	$locale = apply_filters( 'plugin_locale', get_locale(), 'ayudanteai-plugin' );
+	load_textdomain( 'ayudanteai-plugin', WP_LANG_DIR . '/ayudanteai-plugin/ayudanteai-plugin-' . $locale . '.mo' );
+	load_plugin_textdomain( 'ayudanteai-plugin', false, plugin_basename( AYUDANTEAI_PLUGIN_PATH ) . '/languages/' );
 }
 
 /**
@@ -52,9 +54,13 @@ function i18n() {
  * @return void
  */
 function init() {
+	$admin         = new Admin();
+	$api           = new Api();
 	$image_creator = new Block();
+	$admin->init();
+	$api->init();
 	$image_creator->init();
-	do_action( 'wopenai_plugin_init' );
+	do_action( 'ayudanteai_plugin_init' );
 }
 
 /**
@@ -100,10 +106,10 @@ function get_enqueue_contexts() {
 function script_url( $script, $context ) {
 
 	if ( ! in_array( $context, get_enqueue_contexts(), true ) ) {
-		return new WP_Error( 'invalid_enqueue_context', 'Invalid $context specified in Wopenai script loader.' );
+		return new WP_Error( 'invalid_enqueue_context', 'Invalid $context specified in AyudanteAI script loader.' );
 	}
 
-	return WOPENAI_PLUGIN_URL . "dist/js/${script}.js";
+	return AYUDANTEAI_PLUGIN_URL . "dist/js/${script}.js";
 
 }
 
@@ -118,10 +124,10 @@ function script_url( $script, $context ) {
 function style_url( $stylesheet, $context ) {
 
 	if ( ! in_array( $context, get_enqueue_contexts(), true ) ) {
-		return new WP_Error( 'invalid_enqueue_context', 'Invalid $context specified in Wopenai stylesheet loader.' );
+		return new WP_Error( 'invalid_enqueue_context', 'Invalid $context specified in AyudanteAI stylesheet loader.' );
 	}
 
-	return WOPENAI_PLUGIN_URL . "dist/css/${stylesheet}.css";
+	return AYUDANTEAI_PLUGIN_URL . "dist/css/${stylesheet}.css";
 
 }
 
@@ -133,18 +139,18 @@ function style_url( $stylesheet, $context ) {
 function scripts() {
 
 	wp_enqueue_script(
-		'wopenai_plugin_shared',
+		'ayudanteai_plugin_shared',
 		script_url( 'shared', 'shared' ),
 		Utility\get_asset_info( 'shared', 'dependencies' ),
-		WOPENAI_PLUGIN_VERSION,
+		AYUDANTEAI_PLUGIN_VERSION,
 		true
 	);
 
 	wp_enqueue_script(
-		'wopenai_plugin_frontend',
+		'ayudanteai_plugin_frontend',
 		script_url( 'frontend', 'frontend' ),
 		Utility\get_asset_info( 'frontend', 'dependencies' ),
-		WOPENAI_PLUGIN_VERSION,
+		AYUDANTEAI_PLUGIN_VERSION,
 		true
 	);
 
@@ -158,25 +164,25 @@ function scripts() {
 function styles() {
 
 	wp_enqueue_style(
-		'wopenai_plugin_shared',
+		'ayudanteai_plugin_shared',
 		style_url( 'shared', 'shared' ),
 		[],
-		WOPENAI_PLUGIN_VERSION
+		AYUDANTEAI_PLUGIN_VERSION
 	);
 
 	if ( is_admin() ) {
 		wp_enqueue_style(
-			'wopenai_plugin_admin',
+			'ayudanteai_plugin_admin',
 			style_url( 'admin', 'admin' ),
 			[],
-			WOPENAI_PLUGIN_VERSION
+			AYUDANTEAI_PLUGIN_VERSION
 		);
 	} else {
 		wp_enqueue_style(
-			'wopenai_plugin_frontend',
+			'ayudanteai_plugin_frontend',
 			style_url( 'frontend', 'frontend' ),
 			[],
-			WOPENAI_PLUGIN_VERSION
+			AYUDANTEAI_PLUGIN_VERSION
 		);
 	}
 
@@ -193,7 +199,7 @@ function mce_css( $stylesheets ) {
 		$stylesheets .= ',';
 	}
 
-	return $stylesheets . WOPENAI_PLUGIN_URL . ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ?
+	return $stylesheets . AYUDANTEAI_PLUGIN_URL . ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ?
 			'assets/css/frontend/editor-style.css' :
 			'dist/css/editor-style.min.css' );
 }

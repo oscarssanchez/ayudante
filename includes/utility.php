@@ -8,10 +8,10 @@
  * to Namespaces.
  *
  * @link https://developer.wordpress.org/themes/basics/template-tags/
- * @package Wopenai
+ * @package AyudanteAI
  */
 
-namespace Wopenai\Utility;
+namespace AyudanteAI\Utility;
 
 /**
  * Get asset info from extracted asset files
@@ -21,10 +21,10 @@ namespace Wopenai\Utility;
  * @return string|array
  */
 function get_asset_info( $slug, $attribute = null ) {
-	if ( file_exists( WOPENAI_PLUGIN_PATH . 'dist/js/' . $slug . '.asset.php' ) ) {
-		$asset = require WOPENAI_PLUGIN_PATH . 'dist/js/' . $slug . '.asset.php';
-	} elseif ( file_exists( WOPENAI_PLUGIN_PATH . 'dist/css/' . $slug . '.asset.php' ) ) {
-		$asset = require WOPENAI_PLUGIN_PATH . 'dist/css/' . $slug . '.asset.php';
+	if ( file_exists( AYUDANTEAI_PLUGIN_PATH . 'dist/js/' . $slug . '.asset.php' ) ) {
+		$asset = require AYUDANTEAI_PLUGIN_PATH . 'dist/js/' . $slug . '.asset.php';
+	} elseif ( file_exists( AYUDANTEAI_PLUGIN_PATH . 'dist/css/' . $slug . '.asset.php' ) ) {
+		$asset = require AYUDANTEAI_PLUGIN_PATH . 'dist/css/' . $slug . '.asset.php';
 	} else {
 		return null;
 	}

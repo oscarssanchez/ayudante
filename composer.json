@@ -1,9 +1,9 @@
 {
-  "name": "oscarssanchez/wopenai",
+  "name": "oscarssanchez/ayudanteai",
   "type": "wordpress-plugin",
   "authors": [
     {
-      "name": "Wopenai",
+      "name": "AyudanteAI",
       "email": "oscar@oscarssanchez.com"
     }
   ],
@@ -12,7 +12,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Wopenai\\": "includes/classes/"
+      "AyudanteAI\\": "includes/classes/"
     }
   }
 }

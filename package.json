@@ -1,5 +1,5 @@
 {
-  "name": "wopenai-plugin",
+  "name": "ayudanteai-plugin",
   "version": "1.0.0",
   "scripts": {
     "start": "npm run watch",
@@ -21,6 +21,7 @@
     "@wordpress/components": "^19.1.6",
     "@wordpress/create-block": "^4.5.0",
     "@wordpress/element": "4.2.1",
+    "@wordpress/api-fetch": "^6.19.0",
     "@wordpress/i18n": "^4.19.0",
     "10up-toolkit": "^4.3.0"
   },
