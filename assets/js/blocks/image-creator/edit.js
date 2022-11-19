@@ -3,6 +3,7 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { useState, useEffect } from '@wordpress/element';
 import { createBlock } from '@wordpress/blocks';
 import { dispatch } from '@wordpress/data';
+import apiFetch from '@wordpress/api-fetch';
 import { __experimentalNumberControl as NumberControl } from '@wordpress/components';
 
 const edit = ({ attributes, setAttributes, clientId }) => {
@@ -34,33 +35,37 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 
 	const convertToImageBlock = () => {
 		const input = document.getElementById('create-image-input');
-		const insertedBlock = createBlock('core/image', {
-			url: images,
-			alt: input.value,
-		});
 
-		dispatch('core/editor').replaceBlock(clientId, insertedBlock);
+		apiFetch({
+			path: '/ayudanteai/v1/create-attachment/images',
+			method: 'POST',
+			data: {
+				post_title: input.value,
+				attachment_url: images,
+			},
+		}).then((response) => {
+			const insertedBlock = createBlock('core/image', {
+				url: response.url,
+				alt: input.value,
+				id: response.id,
+			});
+			dispatch('core/editor').replaceBlock(clientId, insertedBlock);
+		});
 	};
 
 	const createImages = () => {
 		const input = document.getElementById('create-image-input');
-		const body = {
-			prompt: input.value,
-			n: imageNumber,
-			size: imageSize,
-		};
 
-		fetch('https://api.openai.com/v1/images/generations', {
+		apiFetch({
+			path: '/ayudanteai/v1/generate/images',
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': 'Bearer '
+			data: {
+				prompt: input.value,
+				image_number: imageNumber,
+				image_size: imageSize,
 			},
-			body: JSON.stringify(body),
 		}).then((response) => {
-			response.json().then((data) => {
-				setImageData(data);
-			});
+			setImageData(response);
 		});
 	};
 
