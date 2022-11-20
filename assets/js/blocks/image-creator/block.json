@@ -32,5 +32,6 @@
       "padding": false
     }
   },
+  "editorStyle": "file:../../../../dist/css/image-creator-styles.css",
   "editorScript": "file:../../../../dist/blocks/image-creator/editor.js"
 }
