@@ -24,13 +24,15 @@ import apiFetch from '@wordpress/api-fetch';
  */
 const edit = ({ attributes, setAttributes, clientId }) => {
 	const currentUser = wp.data.select('core').getCurrentUser();
-	const { imageSize = '1024x1024', imageNumber = 4 } = attributes;
+	const { imageSizes = '1024x1024', imageNumber = 4 } = attributes;
 
 	const [isCreateImageModalOpen, setIsCreateImageModalOpen] = useState(false);
 	const [imageData, setImageData] = useState(null);
 	const [images, setImages] = useState(null);
 	const [isImageDataLoading, setIsImageDataLoading] = useState(false);
+	const [isImageUploading, setIsImageUploading] = useState(false);
 	const [imageInput, setImageInput] = useState(false);
+	const [imageSelected, setImageSelected] = useState(false);
 
 	const openImageCreationModal = () => setIsCreateImageModalOpen(true);
 	const closeImageCreationModal = () => setIsCreateImageModalOpen(false);
@@ -46,6 +48,7 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 				imagesFetched[i].addEventListener(
 					'click',
 					() => {
+						setImageSelected(true);
 						imagesFetched[i].classList.add('ayudante-ai-image-result-selected');
 						getImageSrc(imagesFetched[i].src);
 					},
@@ -64,7 +67,7 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 	 */
 	const convertToImageBlock = () => {
 		const input = document.getElementById('create-image-input');
-
+		setIsImageUploading(true);
 		apiFetch({
 			path: '/ayudanteai/v1/create-attachment/images',
 			method: 'POST',
@@ -78,6 +81,7 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 				alt: input.value,
 				id: response.id,
 			});
+			setIsImageUploading(false);
 			dispatch('core/editor').replaceBlock(clientId, insertedBlock);
 		});
 	};
@@ -95,7 +99,7 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 			data: {
 				prompt: input.value,
 				image_number: imageNumber,
-				image_size: imageSize,
+				image_size: imageSizes,
 			},
 		}).then((response) => {
 			setImageData(response);
@@ -106,17 +110,17 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={__('Request Settings', 'ayudanteai-plugin')} initialOpen>
+				<PanelBody title={__('Settings', 'ayudanteai-plugin')} initialOpen>
 					<RadioControl
-						label={__('Images Size"', 'ayudanteai-plugin')}
-						selected={imageSize}
+						label={__('Images Size', 'ayudanteai-plugin')}
+						selected={imageSizes}
 						options={[
 							{ label: '256x256 px', value: '256x256' },
 							{ label: '512x512 px', value: '512x512' },
 							{ label: '1024x1024 px', value: '1024x1024' },
 						]}
 						onChange={(size) => {
-							setAttributes({ imageSize: size });
+							setAttributes({ imageSizes: size });
 						}}
 					/>
 					<NumberControl
@@ -167,6 +171,14 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 							</p>
 						</div>
 					)}
+					{isImageUploading && (
+						<div className="ayudante-ai-image-results-container ayudante-ai-image-loading">
+							<p className="text-images-loading ayudante-ai-help">
+								{__('Uploading your image...', 'ayudanteai-plugin')}
+							</p>
+							<Spinner />
+						</div>
+					)}
 					{imageData && (
 						<div>
 							<p className="text-images-loading center-ai">
@@ -191,7 +203,10 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 										{__('Users', 'ayudanteai-plugin')}
 									</a>
 								</p>
-								<Button variant="primary" onClick={convertToImageBlock}>
+								<Button
+									variant="primary"
+									disabled={!imageSelected}
+									onClick={convertToImageBlock}>
 									{__('Use selected Image', 'ayudanteai-plugin')}
 								</Button>
 							</div>
