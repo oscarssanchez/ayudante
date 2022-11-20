@@ -31,7 +31,8 @@
   },
   "10up-toolkit": {
     "entry": {
-      "image-creator": "./assets/js/blocks/image-creator/index.js"
+      "image-creator": "./assets/js/blocks/image-creator/index.js",
+      "image-creator-styles": "./assets/css/blocks/image-creator/index.css"
     }
   }
 }

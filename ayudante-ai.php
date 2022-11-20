@@ -31,7 +31,6 @@ require_once AYUDANTEAI_PLUGIN_INC . '/core.php';
 
 // Activation/Deactivation.
 register_activation_hook( __FILE__, '\AyudanteAI\Core\activate' );
-register_deactivation_hook( __FILE__, '\AyudanteAI\Core\deactivate' );
 
 // Bootstrap.
 AyudanteAI\Core\setup();

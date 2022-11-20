@@ -10,9 +10,6 @@ namespace AyudanteAI\Core;
 use AyudanteAI\Admin;
 use AyudanteAI\Api;
 use AyudanteAI\ImageCreator\Block;
-use \WP_Error;
-use AyudanteAI\Utility;
-
 
 /**
  * Default setup routine
@@ -26,14 +23,8 @@ function setup() {
 
 	add_action( 'init', $n( 'i18n' ) );
 	add_action( 'init', $n( 'init' ) );
-	add_action( 'wp_enqueue_scripts', $n( 'scripts' ) );
-	add_action( 'wp_enqueue_scripts', $n( 'styles' ) );
-
-	// Editor styles. add_editor_style() doesn't work outside of a theme.
-	add_filter( 'mce_css', $n( 'mce_css' ) );
 	// Hook to allow async or defer on asset loading.
 	add_filter( 'script_loader_tag', $n( 'script_loader_tag' ), 10, 2 );
-
 	do_action( 'ayudanteai_plugin_loaded' );
 }
 
@@ -72,136 +63,6 @@ function activate() {
 	// First load the init scripts in case any rewrite functionality is being loaded
 	init();
 	flush_rewrite_rules();
-}
-
-/**
- * Deactivate the plugin
- *
- * Uninstall routines should be in uninstall.php
- *
- * @return void
- */
-function deactivate() {
-
-}
-
-
-/**
- * The list of knows contexts for enqueuing scripts/styles.
- *
- * @return array
- */
-function get_enqueue_contexts() {
-	return [ 'admin', 'frontend', 'shared' ];
-}
-
-/**
- * Generate an URL to a script, taking into account whether SCRIPT_DEBUG is enabled.
- *
- * @param string $script Script file name (no .js extension)
- * @param string $context Context for the script ('admin', 'frontend', or 'shared')
- *
- * @return string|WP_Error URL
- */
-function script_url( $script, $context ) {
-
-	if ( ! in_array( $context, get_enqueue_contexts(), true ) ) {
-		return new WP_Error( 'invalid_enqueue_context', 'Invalid $context specified in AyudanteAI script loader.' );
-	}
-
-	return AYUDANTEAI_PLUGIN_URL . "dist/js/${script}.js";
-
-}
-
-/**
- * Generate an URL to a stylesheet, taking into account whether SCRIPT_DEBUG is enabled.
- *
- * @param string $stylesheet Stylesheet file name (no .css extension)
- * @param string $context Context for the script ('admin', 'frontend', or 'shared')
- *
- * @return string URL
- */
-function style_url( $stylesheet, $context ) {
-
-	if ( ! in_array( $context, get_enqueue_contexts(), true ) ) {
-		return new WP_Error( 'invalid_enqueue_context', 'Invalid $context specified in AyudanteAI stylesheet loader.' );
-	}
-
-	return AYUDANTEAI_PLUGIN_URL . "dist/css/${stylesheet}.css";
-
-}
-
-/**
- * Enqueue scripts for front-end.
- *
- * @return void
- */
-function scripts() {
-
-	wp_enqueue_script(
-		'ayudanteai_plugin_shared',
-		script_url( 'shared', 'shared' ),
-		Utility\get_asset_info( 'shared', 'dependencies' ),
-		AYUDANTEAI_PLUGIN_VERSION,
-		true
-	);
-
-	wp_enqueue_script(
-		'ayudanteai_plugin_frontend',
-		script_url( 'frontend', 'frontend' ),
-		Utility\get_asset_info( 'frontend', 'dependencies' ),
-		AYUDANTEAI_PLUGIN_VERSION,
-		true
-	);
-
-}
-
-/**
- * Enqueue styles for front-end.
- *
- * @return void
- */
-function styles() {
-
-	wp_enqueue_style(
-		'ayudanteai_plugin_shared',
-		style_url( 'shared', 'shared' ),
-		[],
-		AYUDANTEAI_PLUGIN_VERSION
-	);
-
-	if ( is_admin() ) {
-		wp_enqueue_style(
-			'ayudanteai_plugin_admin',
-			style_url( 'admin', 'admin' ),
-			[],
-			AYUDANTEAI_PLUGIN_VERSION
-		);
-	} else {
-		wp_enqueue_style(
-			'ayudanteai_plugin_frontend',
-			style_url( 'frontend', 'frontend' ),
-			[],
-			AYUDANTEAI_PLUGIN_VERSION
-		);
-	}
-
-}
-
-/**
- * Enqueue editor styles. Filters the comma-delimited list of stylesheets to load in TinyMCE.
- *
- * @param string $stylesheets Comma-delimited list of stylesheets.
- * @return string
- */
-function mce_css( $stylesheets ) {
-	if ( ! empty( $stylesheets ) ) {
-		$stylesheets .= ',';
-	}
-
-	return $stylesheets . AYUDANTEAI_PLUGIN_URL . ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ?
-			'assets/css/frontend/editor-style.css' :
-			'dist/css/editor-style.min.css' );
 }
 
 /**
