@@ -1,7 +1,15 @@
 <?php
+/**
+ * ImageCreator Block class.
+ *
+ * @package AyudanteAI
+ */
 
 namespace AyudanteAI\ImageCreator;
 
+/**
+ * The ImageCreator Block class.
+ */
 class Block {
 
 	/**

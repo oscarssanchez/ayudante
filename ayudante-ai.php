@@ -12,7 +12,10 @@
  * License: GPL v3 or later - http://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: ayudanteai-plugin
  * Domain Path: /lang
+ *
+ * @package AyudanteAI
  */
+
 // Useful global constants.
 define( 'AYUDANTEAI_PLUGIN_VERSION', '0.1.0' );
 define( 'AYUDANTEAI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

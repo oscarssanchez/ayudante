@@ -1,7 +1,15 @@
 <?php
+/**
+ * API class.
+ *
+ * @package AyudanteAI
+ */
 
 namespace AyudanteAI;
 
+/**
+ * Ayudante AI API class.
+ */
 class Api {
 	/**
 	 * Capability required to use the API.
@@ -25,42 +33,49 @@ class Api {
 	 */
 	public function register_routes() {
 		// Generate images endpoint.
-		register_rest_route( AYUDANTEAI_REST_NAMESPACE, '/generate/images', [
-			'methods'  => 'POST',
-			'callback' => [ $this, 'generate_images' ],
-			'show_in_index'       => false,
-			'permission_callback' => function() {
-				return current_user_can( self::CAPABILITY );
-			},
-			'args'                => [
-				'prompt'  => [
-					'description' => 'Text prompt to generate images.',
-					'type'        => 'string',
-					'format'      => 'string',
-					'required'    => true,
+		register_rest_route(
+			AYUDANTEAI_REST_NAMESPACE,
+			'/generate/images',
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'generate_images' ],
+				'show_in_index'       => false,
+				'permission_callback' => function() {
+					return current_user_can( self::CAPABILITY );
+				},
+				'args'                => [
+					'prompt'       => [
+						'description' => 'Text prompt to generate images.',
+						'type'        => 'string',
+						'format'      => 'string',
+						'required'    => true,
+					],
+					'image_size'   => [
+						'description' => 'Requested image sizes.',
+						'type'        => 'string',
+						'required'    => true,
+					],
+					'image_number' => [
+						'description' => 'Requested number of images.',
+						'type'        => 'integer',
+						'required'    => true,
+					],
 				],
-				'image_size' => [
-					'description' => 'Requested image sizes.',
-					'type'        => 'string',
-					'required'    => true,
-				],
-				'image_number' => [
-					'description' => 'Requested number of images.',
-					'type'        => 'integer',
-					'required'    => true,
-				],
-			],
-		] );
+			]
+		);
 
-		register_rest_route( AYUDANTEAI_REST_NAMESPACE, '/create-attachment/images', [
-			'methods'  => 'POST',
-			'callback' => [ $this, 'create_image_attachment' ],
-			'permission_callback' => function() {
-				return current_user_can( self::CAPABILITY );
-			},
-			'show_in_index'       => false,
-				'args' => [
-					'post_title' => [
+		register_rest_route(
+			AYUDANTEAI_REST_NAMESPACE,
+			'/create-attachment/images',
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'create_image_attachment' ],
+				'permission_callback' => function() {
+					return current_user_can( self::CAPABILITY );
+				},
+				'show_in_index'       => false,
+				'args'                => [
+					'post_title'     => [
 						'description' => 'Post title for the attachment.',
 						'type'        => 'string',
 						'required'    => true,
@@ -69,18 +84,21 @@ class Api {
 						'description' => 'Attachment URL.',
 						'type'        => 'string',
 						'required'    => true,
-					]
+					],
 				],
-			] );
+			]
+		);
 	}
 
 	/**
 	 * Create image attachment from a URL
+	 *
+	 * @param \WP_REST_Request $request Request object.
 	 */
 	public function create_image_attachment( \WP_REST_Request $request ) {
-		require_once( ABSPATH . 'wp-admin/includes/media.php' );
-		require_once( ABSPATH . 'wp-admin/includes/file.php' );
-		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
 
 		$post_title     = $request->get_param( 'post_title' );
 		$attachment_url = $request->get_param( 'attachment_url' );
@@ -89,7 +107,7 @@ class Api {
 			$image_id = media_sideload_image( $attachment_url, null, $post_title, 'id' );
 
 			$response = [
-				'id' => $image_id,
+				'id'  => $image_id,
 				'url' => wp_get_attachment_url( $image_id ),
 			];
 
@@ -102,7 +120,7 @@ class Api {
 	/**
 	 * Callback for the generate images endpoint.
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \WP_REST_Request $request Request object.
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
 	 */
 	public function generate_images( \WP_REST_Request $request ) {
@@ -112,8 +130,8 @@ class Api {
 
 		$body = [
 			'prompt' => $prompt,
-			'size' => $image_size,
-			'n' => $image_number,
+			'size'   => $image_size,
+			'n'      => $image_number,
 		];
 
 		try {
@@ -125,16 +143,16 @@ class Api {
 
 			return rest_ensure_response( json_decode( wp_remote_retrieve_body( $response ) ) );
 		} catch ( \Exception $e ) {
-			return rest_ensure_response ( new \WP_Error( 'ayudante_ai_generate_images_error', esc_html( $e->getMessage() ) ) );
+			return rest_ensure_response( new \WP_Error( 'ayudante_ai_generate_images_error', esc_html( $e->getMessage() ) ) );
 		}
 	}
 
 	/**
 	 * Remote request method.
 	 *
-	 * @param $endpoint
-	 * @param string $method
-	 * @param null $body
+	 * @param string      $endpoint Endpoint to request.
+	 * @param string      $method HTTP method.
+	 * @param string|null $body The request body.
 	 * @return array|\WP_Error
 	 */
 	public function remote_request( $endpoint, $method = 'GET', $body = null ) {
