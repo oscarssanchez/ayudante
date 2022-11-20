@@ -48,14 +48,14 @@ class Admin {
 
 		add_settings_section(
 			'ayudanteai-settings',
-			'Settings',
-			[ $this, 'render_settings_section' ],
+			__( 'Settings', 'ayudanteai-plugin' ),
+			'',
 			'ayudanteai-settings',
 		);
 
 		add_settings_field(
 			'openai_token',
-			'OpenAI Token',
+				__( 'OpenAI Token', 'ayudanteai-plugin' ),
 			[ $this, 'render_openai_token_field' ],
 			'ayudanteai-settings',
 			'ayudanteai-settings',
@@ -63,18 +63,11 @@ class Admin {
 	}
 
 	/**
-	 * Render settings section callback.
-	 */
-	public function render_settings_section() {
-		echo 'Settings for Ayudante AI';
-	}
-
-	/**
 	 * Render add settings field callback.
 	 */
 	public function render_openai_token_field() {
 		$token = get_option( 'openai_token' );
-		echo '<input type="text" name="openai_token" value="' . esc_attr( $token ) . '" />';
+		printf( '<input type="text" name="openai_token" value="%s" />', ! empty( $token ) ? $token : '' );
 	}
 
 	/**
@@ -86,6 +79,7 @@ class Admin {
 			<h1><?php esc_html_e( 'Ayudante AI', 'ayudanteai-plugin' ); ?></h1>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'ayudanteai-settings' ); ?>
+				<?php settings_errors(); ?>
 				<?php do_settings_sections( 'ayudanteai-settings' ); ?>
 				<?php submit_button(); ?>
 			</form>
