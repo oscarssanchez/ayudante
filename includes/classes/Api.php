@@ -141,9 +141,17 @@ class Api {
 				wp_json_encode( $body )
 			);
 
-			return rest_ensure_response( json_decode( wp_remote_retrieve_body( $response ) ) );
-		} catch ( \Exception $e ) {
-			return rest_ensure_response( new \WP_Error( 'ayudante_ai_generate_images_error', esc_html( $e->getMessage() ) ) );
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response_body = json_decode( wp_remote_retrieve_body( $response ) );
+
+			if ( $response_code !== 200 ) {
+				$error = sprintf( __( 'Error %d: %s', 'ayudanteai-plugin' ), $response_code, $response_body->error->message, );
+				throw new \Exception( $error );
+			}
+
+			return rest_ensure_response( $response_body );
+		} catch ( \Exception $error ) {
+			return rest_ensure_response( $error->getMessage() );
 		}
 	}
 
