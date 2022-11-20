@@ -26,6 +26,7 @@ class Api {
 	 */
 	public function init() {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+		add_action( 'admin_notices', [ $this, 'admin_notices' ] );
 	}
 
 	/**
@@ -45,20 +46,23 @@ class Api {
 				},
 				'args'                => [
 					'prompt'       => [
-						'description' => 'Text prompt to generate images.',
+						'description' => __( 'Text prompt to generate images.', 'ayudanteai-plugin' ),
 						'type'        => 'string',
 						'format'      => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'image_size'   => [
-						'description' => 'Requested image sizes.',
+						'description' => __( 'Requested image sizes.', 'ayudanteai-plugin' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_text_field'
 					],
 					'image_number' => [
-						'description' => 'Requested number of images.',
+						'description' => __( 'Requested number of images.', 'ayudanteai-plugin' ),
 						'type'        => 'integer',
 						'required'    => true,
+						'sanitize_callback' => 'absint',
 					],
 				],
 			]
@@ -76,14 +80,16 @@ class Api {
 				'show_in_index'       => false,
 				'args'                => [
 					'post_title'     => [
-						'description' => 'Post title for the attachment.',
+						'description' => __( 'Post title for the attachment.', 'ayudanteai-plugin' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'attachment_url' => [
-						'description' => 'Attachment URL.',
+						'description' => __( 'Attachment URL.', 'ayudanteai-plugin' ),
 						'type'        => 'string',
 						'required'    => true,
+						'sanitize_callback' => 'esc_url_raw',
 					],
 				],
 			]
@@ -169,5 +175,19 @@ class Api {
 		$url = self::OPENAI_API_URL . '/' . $endpoint;
 
 		return wp_remote_request( $url, $args );
+	}
+
+	/**
+	 * Display various admin notices.
+	 */
+	public function admin_notices() {
+		$token = get_option( 'openai_token' );
+		if ( ! $token ) {
+			?>
+			<div class="notice notice-error">
+				<p><?php esc_html_e( 'You need to set an OpenAI API token to use this plugin. Please go to the Ayudante AI settings page.', 'ayudanteai-plugin' ); ?></p>
+			</div>
+			<?php
+		}
 	}
 }
