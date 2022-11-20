@@ -11,8 +11,17 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { useState, useEffect } from '@wordpress/element';
 import { createBlock } from '@wordpress/blocks';
 import { dispatch } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 
+/**
+ * Edit component.
+ *
+ * @param attributes
+ * @param setAttributes
+ * @param clientId
+ * @returns {JSX.Element}
+ */
 const edit = ({ attributes, setAttributes, clientId }) => {
 	const currentUser = wp.data.select('core').getCurrentUser();
 	const { imageSize = '1024x1024', imageNumber = 4 } = attributes;
@@ -25,7 +34,6 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 
 	const openImageCreationModal = () => setIsCreateImageModalOpen(true);
 	const closeImageCreationModal = () => setIsCreateImageModalOpen(false);
-
 	const getImageSrc = (imageSrc) => setImages(imageSrc);
 
 	useEffect(() => {
@@ -51,6 +59,9 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 		}
 	});
 
+	/**
+	 * Converts a selected image into an Image block.
+	 */
 	const convertToImageBlock = () => {
 		const input = document.getElementById('create-image-input');
 
@@ -71,6 +82,9 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 		});
 	};
 
+	/**
+	 * Issues a request to the Ayudante AI API to generate an image.
+	 */
 	const createImages = () => {
 		const input = document.getElementById('create-image-input');
 		setImageData(null);
@@ -92,9 +106,9 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title="Request Settings" initialOpen>
+				<PanelBody title={__('Request Settings', 'ayudanteai-plugin')} initialOpen>
 					<RadioControl
-						label="Images Size"
+						label={__('Images Size"', 'ayudanteai-plugin')}
 						selected={imageSize}
 						options={[
 							{ label: '256x256 px', value: '256x256' },
@@ -108,7 +122,7 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 					<NumberControl
 						max="4"
 						min="1"
-						label="Images Requested per prompt"
+						label={__('Images Requested per prompt', 'ayudanteai-plugin')}
 						value={imageNumber}
 						onChange={(number) => {
 							setAttributes({ imageNumber: number });
@@ -116,7 +130,10 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 					/>
 				</PanelBody>
 			</InspectorControls>
-			<Placeholder label="Image Creator" instructions="Choose an Action to get started.">
+			<Placeholder
+				label="Image Creator"
+				instructions={__('Choose an Action to get started.', 'ayudanteai-plugin')}
+			>
 				<Button variant="secondary" onClick={openImageCreationModal}>
 					Create Image
 				</Button>
@@ -127,28 +144,35 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 					title={`Hey ${currentUser.name}, let's create an image together!`}
 					onRequestClose={closeImageCreationModal}
 				>
-					<p>Generate an Image using a description</p>
+					<p>{__('Generate an Image using a description', 'ayudanteai-plugin')}</p>
 					<input
 						id="create-image-input"
 						type="text"
 						placeholder="Type in some Ideas..."
 					/>
 					<Button variant="primary" onClick={createImages}>
-						Create Images
+						{__('Create Images', 'ayudanteai-plugin')}
 					</Button>
 					{isImageDataLoading && (
 						<div className="ayudante-ai-image-results-container ayudante-ai-image-loading">
-							<p className="text-images-loading ayudante-ai-help">Creating your images...</p>
+							<p className="text-images-loading ayudante-ai-help">
+								{__('Creating your images...', 'ayudanteai-plugin')}
+							</p>
 							<Spinner />
 							<p className="ayudante-ai-help ayudante-tip">
-								Tip: You can do some things in order to get better images like this
-								and this
+								{__(
+									'Tip: Large descriptive prompts tend to generate better images.',
+									'ayudanteai-plugin',
+								)}
 							</p>
 						</div>
 					)}
 					{imageData && (
 						<div>
-							<p className="text-images-loading center-ai">Showing images of: {imageInput}</p>
+							<p className="text-images-loading center-ai">
+								{__('Showing images of: ', 'ayudanteai-plugin')}
+								{imageInput}
+							</p>
 							<div className="ayudante-ai-image-results-container">
 								{imageData.data.map((image) => {
 									return <img
@@ -159,10 +183,17 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 									/>;
 								})}
 								<p className="ayudante-ai-help ayudante-tip">
-									Not getting a good result? Get some inspiration from{' '}
-									<a href="https://www.reddit.com/r/dalle2">Reddit</a>
+									{__(
+										'Not getting a good result? Get some inspiration from ',
+										'ayudanteai-plugin',
+									)}
+									<a href="https://www.reddit.com/r/dalle2">
+										{__('Users', 'ayudanteai-plugin')}
+									</a>
 								</p>
-								<Button variant="primary" onClick={convertToImageBlock}>Use selected Image</Button>
+								<Button variant="primary" onClick={convertToImageBlock}>
+									{__('Use selected Image', 'ayudanteai-plugin')}
+								</Button>
 							</div>
 						</div>
 					)}

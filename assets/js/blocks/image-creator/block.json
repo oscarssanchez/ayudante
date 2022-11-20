@@ -1,6 +1,6 @@
 {
   "title": "Image Creator",
-  "description": "Type something and get an image back with AI!",
+  "description": "Type a prompt and get an image back powered by AI!",
   "name": "ayudanteai/image-creator",
   "icon": "feedback",
   "attributes":{
@@ -9,27 +9,6 @@
     },
     "imageNumber": {
       "type": "string"
-    }
-  },
-  "supports": {
-    "align": false,
-    "alignWide": false,
-    "anchor": false,
-    "color":{
-      "gradients": false,
-      "background": false,
-      "text": false
-    },
-    "customClassName": false,
-    "defaultStylePicker": false,
-    "fontSize": false,
-    "html": false,
-    "inserter": true,
-    "lineHeight": true,
-    "multiple": true,
-    "reusable": false,
-    "spacing": {
-      "padding": false
     }
   },
   "editorStyle": "file:../../../../dist/css/image-creator-styles.css",
