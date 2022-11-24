@@ -1,7 +1,42 @@
 # Ayudante Model B
 
-Ayudante is a series of tools designed to help creators create content faster and enhance their already existing content on WordPress.
+**Contributors:** [oscarssanchez](https://profiles.wordpress.org/oscarssanchez)
 
-As a starting point, it will implement of OpenAI tools https://openai.com/ but in the future, it might make use of other alternatives, such as Stability Difussion.
+[![Support Level](https://img.shields.io/badge/support-active-green.svg)](#support-level)
 
-Model B stands for "Basic" and aims to provide basic AI functionality, such as DALL-E 2 Image generation from text prompts.
+![](assets/images/ayudante1.jpg)
+
+## Overview
+Ayudante is a series of tools that leverage Machine Learning models, available through APIs,
+to help you create better and faster content on your WordPress site.
+
+Model B stands for "Basic" aiming provide general tools for everyone.
+
+### Requirements
+
+Ayudante requires the following to work:
+
+* API Token from one AI provider **At this point only [OpenAI](https://openai.com/) is supported**
+* [WordPress](http://wordpress.org) 6.0 or greater
+* [PHP](https://php.net/) 7.0
+
+## Installation
+
+* Upload the folder to your /wp-content/plugins/ directory
+* Activate the plugin through the 'Plugins' menu in WordPress
+* Plugin your API Token in the plugin settings page
+
+## Features
+
+### Image Creation
+
+A block that creates original images from text and uploads them to your media library.
+
+![](assets/images/imagecreation.png)
+
+Supported AI providers:
+* [OpenAI](https://openai.com/)
+
+### 1.0 ###
+
+* First version
