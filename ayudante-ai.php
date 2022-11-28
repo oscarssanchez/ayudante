@@ -5,8 +5,8 @@
  * Description: Enhance your WordPress site with artificial intelligence.
  * Author: Oscar Sanchez
  * Author URI: http://oscarssanchez.com/
- * Version: 0.0.1
- * Stable tag: 0.0.1
+ * Version: 1.0.0
+ * Stable tag: 1.0.0
  * Requires at least: 6.1
  * Tested up to: 6.1
  * License: GPL v3 or later - http://www.gnu.org/licenses/gpl-3.0.html
@@ -17,7 +17,7 @@
  */
 
 // Useful global constants.
-define( 'AYUDANTEAI_PLUGIN_VERSION', '0.1.0' );
+define( 'AYUDANTEAI_PLUGIN_VERSION', '1,0.0' );
 define( 'AYUDANTEAI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'AYUDANTEAI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'AYUDANTEAI_PLUGIN_INC', AYUDANTEAI_PLUGIN_PATH . 'includes/' );

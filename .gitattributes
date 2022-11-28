@@ -1,0 +1,27 @@
+/.git export-ignore
+/.github export-ignore
+/.wordpress-org export-ignore
+/.husky export-ignore export-ignore
+/vendor/10up export-ignore
+/vendor/automattic export-ignore
+/vendor/bin export-ignore
+/vendor/dealerdirect export-ignore
+/vendor/phpcompatibility export-ignore
+/vendor/sirbrillig export-ignore
+/vendor/squizlabs export-ignore
+/vendor/wp-coding-standards export-ignore
+/node_modules export-ignore
+
+.editorconfig export-ignore
+.gitattributes export-ignore
+.eslintrc export-ignore
+.gitignore export-ignore
+.lintstagedrc.json export-ignore
+.npmrc export-ignore
+.nvmrc export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+package.json export-ignore
+package-lock.json export-ignore
+phpcs.xml export-ignore
+README.md export-ignore
