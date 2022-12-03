@@ -1,4 +1,5 @@
 import {
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalNumberControl as NumberControl,
 	Button,
 	Placeholder,
@@ -17,12 +18,13 @@ import apiFetch from '@wordpress/api-fetch';
 /**
  * Edit component.
  *
- * @param attributes
- * @param setAttributes
- * @param clientId
- * @returns {JSX.Element}
+ * @param {object} attributes  Attributes.
+ * @param {object} attributes.attributes  Attributes.
+ * @param {object} attributes.setAttributes  Set attributes.
+ * @param {object} attributes.clientId  Set attributes.
+ * @returns {Function} Component element.
  */
-const edit = ({ attributes, setAttributes, clientId }) => {
+const ImageCreatorPostsEdit = ({ attributes, setAttributes, clientId }) => {
 	const currentUser = wp.data.select('core').getCurrentUser();
 	const { imageSizes = '1024x1024', imageNumber = 4 } = attributes;
 
@@ -60,7 +62,7 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 		if (imagesFetched.length > 0 && imagePrompt.value.length > 0 && !isImageDataLoading) {
 			setImageInput(imagePrompt.value);
 		}
-	});
+	}, [images, imageInput, isImageDataLoading]);
 
 	/**
 	 * Converts a selected image into an Image block.
@@ -187,12 +189,15 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 							</p>
 							<div className="ayudante-ai-image-results-container">
 								{imageData.data.map((image) => {
-									return <img
+									return (
+										<img
+											alt={imageInput}
 											className="ayudante-ai-image-result"
 											src={image.url}
 											width="256"
 											height="256"
-									/>;
+										/>
+									);
 								})}
 								<p className="ayudante-ai-help ayudante-tip">
 									{__(
@@ -206,7 +211,8 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 								<Button
 									variant="primary"
 									disabled={!imageSelected}
-									onClick={convertToImageBlock}>
+									onClick={convertToImageBlock}
+								>
 									{__('Use selected Image', 'ayudanteai-plugin')}
 								</Button>
 							</div>
@@ -218,4 +224,4 @@ const edit = ({ attributes, setAttributes, clientId }) => {
 	);
 };
 
-export default edit;
+export default ImageCreatorPostsEdit;
