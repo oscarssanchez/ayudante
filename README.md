@@ -10,7 +10,7 @@
 Ayudante is a series of tools that leverage Machine Learning models, available through APIs,
 to help you create better and faster content on your WordPress site.
 
-Model B stands for "Basic" aiming provide general tools for everyone.
+Model B stands for "Basic" aiming to provide general tools for everyone.
 
 ### Requirements
 
@@ -24,7 +24,7 @@ Ayudante requires the following to work:
 
 * Upload the folder to your /wp-content/plugins/ directory
 * Activate the plugin through the 'Plugins' menu in WordPress
-* Plugin your API Token in the plugin settings page
+* Enter your API Token in the plugin settings page
 
 ## Features
 

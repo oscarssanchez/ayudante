@@ -46,22 +46,22 @@ class Api {
 				},
 				'args'                => [
 					'prompt'       => [
-						'description' => __( 'Text prompt to generate images.', 'ayudanteai-plugin' ),
-						'type'        => 'string',
-						'format'      => 'string',
-						'required'    => true,
+						'description'       => __( 'Text prompt to generate images.', 'ayudanteai-plugin' ),
+						'type'              => 'string',
+						'format'            => 'string',
+						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'image_size'   => [
-						'description' => __( 'Requested image sizes.', 'ayudanteai-plugin' ),
-						'type'        => 'string',
-						'required'    => true,
-						'sanitize_callback' => 'sanitize_text_field'
+						'description'       => __( 'Requested image sizes.', 'ayudanteai-plugin' ),
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'image_number' => [
-						'description' => __( 'Requested number of images.', 'ayudanteai-plugin' ),
-						'type'        => 'integer',
-						'required'    => true,
+						'description'       => __( 'Requested number of images.', 'ayudanteai-plugin' ),
+						'type'              => 'integer',
+						'required'          => true,
 						'sanitize_callback' => 'absint',
 					],
 				],
@@ -80,15 +80,15 @@ class Api {
 				'show_in_index'       => false,
 				'args'                => [
 					'post_title'     => [
-						'description' => __( 'Post title for the attachment.', 'ayudanteai-plugin' ),
-						'type'        => 'string',
-						'required'    => true,
+						'description'       => __( 'Post title for the attachment.', 'ayudanteai-plugin' ),
+						'type'              => 'string',
+						'required'          => true,
 						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'attachment_url' => [
-						'description' => __( 'Attachment URL.', 'ayudanteai-plugin' ),
-						'type'        => 'string',
-						'required'    => true,
+						'description'       => __( 'Attachment URL.', 'ayudanteai-plugin' ),
+						'type'              => 'string',
+						'required'          => true,
 						'sanitize_callback' => 'esc_url_raw',
 					],
 				],
@@ -128,6 +128,7 @@ class Api {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 * @throws \Exception The error from the API.
 	 */
 	public function generate_images( \WP_REST_Request $request ) {
 		$prompt       = $request->get_param( 'prompt' );
@@ -150,8 +151,9 @@ class Api {
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response_body = json_decode( wp_remote_retrieve_body( $response ) );
 
-			if ( $response_code !== 200 ) {
-				$error = sprintf( __( 'Error %d: %s', 'ayudanteai-plugin' ), $response_code, $response_body->error->message, );
+			if ( 200 !== $response_code ) {
+				// Translators: %1$d response code %2$s error message.
+				$error = sprintf( __( 'Error %1$d: %2$s', 'ayudanteai-plugin' ), $response_code, $response_body->error->message, );
 				throw new \Exception( $error );
 			}
 
