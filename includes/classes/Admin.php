@@ -55,7 +55,7 @@ class Admin {
 
 		add_settings_field(
 			'openai_token',
-				__( 'OpenAI Token', 'ayudanteai-plugin' ),
+			__( 'OpenAI Token', 'ayudanteai-plugin' ),
 			[ $this, 'render_openai_token_field' ],
 			'ayudanteai-settings',
 			'ayudanteai-settings',
@@ -67,7 +67,7 @@ class Admin {
 	 */
 	public function render_openai_token_field() {
 		$token = get_option( 'openai_token' );
-		printf( '<input type="text" name="openai_token" value="%s" />', ! empty( $token ) ? $token : '' );
+		printf( '<input type="text" name="openai_token" value="%s" />', ! empty( $token ) ? esc_html( $token ) : '' );
 	}
 
 	/**
