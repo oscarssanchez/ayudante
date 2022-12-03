@@ -2,12 +2,12 @@
  * Internal dependencies
  */
 import { registerBlockType } from '@wordpress/blocks';
-import edit from './edit';
+import ImageCreatorPostsEdit from './Edit';
 import name from './block.json';
 
 /**
  * Register block
  */
 registerBlockType(name, {
-	edit,
+	edit: ImageCreatorPostsEdit,
 });
