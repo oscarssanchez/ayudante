@@ -23,6 +23,10 @@ class Block {
 	 * Register block.
 	 */
 	public function register_block() {
+		if ( ! get_option( 'ayudanteai_openai_token' ) ) {
+			return;
+		}
+
 		register_block_type(
 			AYUDANTEAI_PLUGIN_PATH . '/assets/js/blocks/image-creator',
 			[
